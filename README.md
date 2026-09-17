@@ -41,8 +41,6 @@ customLanguages:
     expandoChar: z
 ```
 
-On MacOS it's `dylib`
-
 If you already have some rules setup in the `rules/` directory, you can run `ast-grep scan .` to run it on your project.
 
 ## Use Cases

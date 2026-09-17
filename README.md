@@ -1,6 +1,7 @@
 # Gleam ast-grep
 
-This project is an attempt to get [ast-grep](https://github.com/ast-grep/ast-grep) working with [Gleam](https://gleam.run/).
+This project shows off how to setup [ast-grep](https://github.com/ast-grep/ast-grep) with [Gleam](https://gleam.run/)
+and concrete use cases that you can try out in your Gleam projects.
 
 Setup is very easy. We setup a custom language with ast-grep using Gleam's [tree-sitter](https://github.com/gleam-lang/tree-sitter-gleam/) repository.
 
@@ -98,6 +99,8 @@ warning[explicit_return_type]: Functions should have explicit return types
    │
    = This gives us more information in the AST for analysis.
 ```
+
+###
 
 ## Setup and Installation
 

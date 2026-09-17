@@ -1,12 +1,24 @@
 # Gleam ast-grep
 
-This project shows off how to setup [ast-grep](https://github.com/ast-grep/ast-grep) with [Gleam](https://gleam.run/)
-and concrete use cases that you can try out in your Gleam projects.
+This project shows off how to setup [ast-grep](https://github.com/ast-grep/ast-grep) with [Gleam](https://gleam.run/) and concrete use cases that you can try out in your Gleam projects.
 
-Setup is very easy. We setup a custom language with ast-grep using Gleam's [tree-sitter](https://github.com/gleam-lang/tree-sitter-gleam/) repository.
+The setup is pretty easy. We define a custom language for `ast-grep` which references Gleam's [tree-sitter](https://github.com/gleam-lang/tree-sitter-gleam/) repository.
 
-You can come a loong way with "just" `grep` and don't immediately have to opt for `ast-grep`. But I do think for larger structural changes,
-linting rule distribution and not having to deal with regex edge cases it is worth exploring.
+Gleam's minimal syntax and solid primitives make it an excellent target for more static code analysis tooling. I am sure this is the beginning of a wonderful world of tooling yet to come.
+
+Gleam's compiler is already doing a lot of work for us and gives users many helpful hints about certain code patterns (unused variables, unncessary list spread, etc.). Gleam also has an excellent language server that offers many useful code actions.
+
+You
+
+## Why `ast-grep`?
+
+You can come a loong way with "just" `grep` and don't immediately have to opt for `ast-grep`. But I do think for larger structural changes, linting rule distribution and not having to deal with regex edge cases it is worth exploring.
+
+For one, you don't have to worry about whitespace or new lines or other formatting quirks with regex.
+
+`ast-grep` has an interactive mode, which is helpful for larger refactorings in the style of snapshot testing with [birdie](https://github.com/giacomocavalieri/birdie):
+
+![Screenshot of the Terminal doing an interactive refactoring](./images/interactive-refactoring.png)
 
 ## Setup and Installation
 
@@ -47,15 +59,13 @@ If you already have some rules setup in the `rules/` directory, you can run `ast
 
 ### Linting
 
-You can make linting rules very quickly with this setup. There is no official Gleam linter at the time of writing this, so my rules I will use are
-purely from my own subjective preferences and not measures of better, worse or idiomatic Gleam code.
+You can make linting rules very quickly with this setup. There is no official Gleam linter at the time of writing this, so the rules I will use are subjective preferences and not measures of better, worse or idiomatic Gleam code.
 
 A lot of the rules I tried to implement come from the project [glinter](https://github.com/pairshaped/glinter), a linter for Gleam programs written in Gleam.
 
-#### **[Result with `String` Error](./rules/result_string_error.yml)**
+#### **Result with `String` Error - [rule file](./rules/result_string_error.yml)**
 
-I would argue, that `String` are not very descriptive and a good model for your program apis. Ideally, you create a custom Error type for your
-library or application. So you should not write code:
+I would argue, that `String` are not very descriptive and makes it difficult to do proper error handling. Ideally, you create a custom Error type for your library or application. So you should not write this code:
 
 ```gleam
 pub fn wibble() -> Result(wisp.Response, String) {
@@ -63,7 +73,7 @@ pub fn wibble() -> Result(wisp.Response, String) {
 }
 ```
 
-but instead:
+but rather:
 
 ```gleam
 pub type AppError {
@@ -76,18 +86,34 @@ pub fn wibble() -> Result(wisp.Response, AppError) {
 }
 ```
 
-#### **[Boolean in Public API](./rules/bool_in_public_api.yml)**
+#### **Boolean in Public API - [rule file](./rules/bool_in_public_api.yml)**
 
-`Bool` does not carry a lot of context. `True` or `False` means nothing, without more knowledge about the domain. In a function call
-without a label, this can lead to very confusing code. So ideally you avoid them at all and replace it with a custom type, especially
-in the public API of your application or library.
+`Bool` does not carry any context by itself. `True` or `False` means nothing, without more knowledge about the domain. In a function call - especially without a label - this can lead to very confusing code. So ideally you avoid them at all and replace it with a custom type, especially in the public API of your application or library.
 
-Checkout the rule here: [rules/bool_in_public_api.yml](./rules/bool_in_public_api.yml)
+```gleam
+pub type Status {
+  Published
+  Draft
+}
+
+pub type Post {
+  Post(
+    // ... properties ...
+
+    // Just ok and arguably even bad
+    published: Bool,
+
+    // Better
+    status: Status
+  )
+}
+```
+
+Checkout the rule file here: [rules/bool_in_public_api.yml](./rules/bool_in_public_api.yml)
 
 #### Example Output
 
-[src/app.gleam](./src/app.gleam) contains some example code that triggers the [rules](./rules) setup in this repository.
-Running `ast-grep scan .` gives us this output:
+[src/app.gleam](./src/app.gleam) contains some example code that triggers the [rules](./rules) setup in this repository. Running `ast-grep scan .` gives us this output:
 
 ```console
 ~/daniellionel01/gleam-ast-grep $ ast-grep scan .
@@ -137,10 +163,6 @@ warning[explicit_return_type]: Functions should have explicit return types
 
 ### Refactors
 
-`ast-grep` has a very cool interactive refactor tui that reminds me of snapshot testing with [birdie](https://github.com/giacomocavalieri/birdie).
-
-![./images/interactive-refactoring.png]
-
 Unfortunately at the time of writing this (September 2026), the grammar defined in the Gleam tree sitter
 repository is not compatible with the metavariable capture syntax of `ast-grep` that is very important
 for reliable rewrite rules.
@@ -185,7 +207,7 @@ pub fn wibble() {
 }
 ```
 
-`ast-grep` cannot figure out what return type it has. However, if you always make sure to add explicit return types to your functions like so:
+`ast-grep` will not know the return type. However, if you always make sure to add explicit return types to your functions like this:
 
 ```gleam
 pub fn wibble() -> String {
@@ -193,8 +215,7 @@ pub fn wibble() -> String {
 }
 ```
 
-Then `ast-grep` rules can actually work with that. A linting rule you can use to make sure all of your functions have explicit return types can
-look like this:
+Then `ast-grep` rules can actually work with that. A linting rule you can use to make sure all of your functions have explicit return types can look like this:
 
 ```yaml
 id: explicit_return_type
@@ -211,3 +232,7 @@ rule:
 ```
 
 More gotchas are documented in Gleams [tree-sitter](https://github.com/gleam-lang/tree-sitter-gleam/) repository: https://github.com/gleam-lang/tree-sitter-gleam/#various-gotchas
+
+## Future Work & Ideas
+
+I think Gleam

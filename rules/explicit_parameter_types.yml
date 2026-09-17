@@ -1,0 +1,16 @@
+id: explicit_parameter_types
+language: gleam
+severity: warning
+message: Add explicit types to all function parameters
+note: Gleam conventions recommend annotations for every module function.
+rule:
+  all:
+    - kind: function
+    - has:
+        field: parameters
+        has:
+          kind: function_parameter
+          not:
+            has:
+              field: type
+              kind: type

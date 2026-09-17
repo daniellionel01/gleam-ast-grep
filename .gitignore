@@ -1,0 +1,9 @@
+*.beam
+*.ez
+/build
+erl_crash.dump
+
+# This will contain the tree-sitter grammar for Gleam,
+# but needs to be built depending on the OS of the user.
+.ast-grep/
+sgconfig.yml

@@ -1,0 +1,20 @@
+id: result_string_error
+language: gleam
+severity: warning
+message: Use a custom error type instead of String
+note: String errors cannot be pattern matched by callers.
+rule:
+  kind: function
+  has:
+    field: return_type
+    all:
+      - kind: type
+      - has:
+          field: name
+          regex: "^Result$"
+      - has:
+          field: arguments
+          has:
+            kind: type_argument
+            nthChild: 2
+            regex: "^String$"

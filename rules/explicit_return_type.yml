@@ -1,0 +1,12 @@
+id: explicit_return_type
+language: gleam
+severity: warning
+message: Functions should have explicit return types
+note: This gives us more information in the AST for analysis.
+rule:
+  all:
+    - kind: function
+    - not:
+        has:
+          field: return_type
+          kind: type

@@ -1,0 +1,29 @@
+id: bool_in_public_api
+language: gleam
+severity: warning
+message: Use a descriptive custom type instead of Bool in a public API
+note: Keep Bool when two unnamed states are clear and cannot be confused.
+rule:
+  any:
+    - all:
+        - kind: function_parameter
+        - has:
+            field: type
+            regex: "^Bool$"
+        - inside:
+            stopBy: end
+            all:
+              - kind: function
+              - has:
+                  kind: visibility_modifier
+    - all:
+        - kind: data_constructor_argument
+        - has:
+            field: value
+            regex: "^Bool$"
+        - inside:
+            stopBy: end
+            all:
+              - kind: type_definition
+              - has:
+                  kind: visibility_modifier

@@ -1,0 +1,13 @@
+diff --git a/grammar.js b/grammar.js
+index 7f02e48..47c67ea 100644
+--- a/grammar.js
++++ b/grammar.js
+@@ -970,7 +970,7 @@ module.exports = grammar({
+ 
+     /* Reused types from the Gleam lexer */
+     _discard_name: ($) => /_[_0-9a-z]*/,
+-    _name: ($) => /[_a-z][_0-9a-z]*/,
++    _name: ($) => choice(/[_a-z][_0-9a-z]*/, /z{1,3}[A-Z][A-Z0-9_]*/),
+     _upname: ($) => /[A-Z][0-9a-zA-Z]*/,
+   },
+ });

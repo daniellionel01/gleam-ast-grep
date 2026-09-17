@@ -1,0 +1,7 @@
+id: replace-bool-status
+language: gleam
+severity: warning
+message: Use the subscription status type
+rule:
+  pattern: subscription.update($DATABASE, $USER_ID, True)
+fix: subscription.set_status($DATABASE, $USER_ID, subscription.Active)

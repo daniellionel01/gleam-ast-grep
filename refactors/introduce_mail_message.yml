@@ -1,0 +1,7 @@
+id: introduce-mail-message
+language: gleam
+severity: warning
+message: Use the mail message value
+rule:
+  pattern: mailer.send($SENDER, $ADDRESS, $SUBJECT, $BODY)
+fix: "mailer.send_message($SENDER, mailer.Message(to: $ADDRESS, subject: $SUBJECT, body: $BODY))"

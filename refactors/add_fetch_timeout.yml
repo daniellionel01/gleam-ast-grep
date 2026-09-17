@@ -1,0 +1,7 @@
+id: add-fetch-timeout
+language: gleam
+severity: warning
+message: Use the API client timeout
+rule:
+  pattern: api_client.fetch_user($CLIENT, $ID)
+fix: "api_client.fetch_user_with_timeout($CLIENT, $ID, timeout: 5000)"

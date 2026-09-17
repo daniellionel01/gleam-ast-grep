@@ -8,6 +8,43 @@ Setup is very easy. We setup a custom language with ast-grep using Gleam's [tree
 You can come a loong way with "just" `grep` and don't immediately have to opt for `ast-grep`. But I do think for larger structural changes,
 linting rule distribution and not having to deal with regex edge cases it is worth exploring.
 
+## Setup and Installation
+
+[Install ast-grep](https://github.com/ast-grep/ast-grep#installation) for whatever platform you're on.
+
+Then we build the Gleam parser from the tree sitter repository:
+
+```bash
+mkdir -p .ast-grep/parsers
+git clone --depth 1 https://github.com/gleam-lang/tree-sitter-gleam .ast-grep/tree-sitter-gleam
+
+# MacOS
+tree-sitter build -o .ast-grep/parsers/gleam.dylib .ast-grep/tree-sitter-gleam
+
+# Linux
+tree-sitter build -o .ast-grep/parsers/gleam.so .ast-grep/tree-sitter-gleam
+```
+
+I have no idea how to anything on Windows, so I cannot tell you how to install that stuff on there.
+
+Now we can configure `ast-grep` and create `sgconfig.yml`:
+
+```yaml
+# sgconfig.yml
+ruleDirs: [rules]
+customLanguages:
+  gleam:
+    # For MacOS, or gleam.so on Linux
+    libraryPath: .ast-grep/parsers/gleam.dylib
+    extensions: [gleam]
+    # This is important for refactorings (read more on it below)
+    expandoChar: z
+```
+
+On MacOS it's `dylib`
+
+If you already have some rules setup in the `rules/` directory, you can run `ast-grep scan .` to run it on your project.
+
 ## Use Cases
 
 ### Linting
@@ -100,42 +137,42 @@ warning[explicit_return_type]: Functions should have explicit return types
    = This gives us more information in the AST for analysis.
 ```
 
-###
+### Refactors
 
-## Setup and Installation
+`ast-grep` has a very cool interactive refactor tui that reminds me of snapshot testing with [birdie](https://github.com/giacomocavalieri/birdie).
 
-[Install ast-grep](https://github.com/ast-grep/ast-grep#installation) for whatever platform you're on.
+![./images/interactive-refactoring.png]
 
-Then we build the Gleam parser from the tree sitter repository:
+Unfortunately at the time of writing this (September 2026), the grammar defined in the Gleam tree sitter
+repository is not compatible with the metavariable capture syntax of `ast-grep` that is very important
+for reliable rewrite rules.
 
-```bash
-mkdir -p .ast-grep/parsers
-git clone --depth 1 https://github.com/gleam-lang/tree-sitter-gleam .ast-grep/tree-sitter-gleam
+This is because Gleam only allows lower cased names to be parsed, but `ast-grep` metavariables are uppercased.
 
-# MacOS
-tree-sitter build -o .ast-grep/parsers/gleam.dylib .ast-grep/tree-sitter-gleam
-
-# Linux
-tree-sitter build -o .ast-grep/parsers/gleam.so .ast-grep/tree-sitter-gleam
-```
-
-I have no idea how to anything on Windows, so I cannot tell you how to install that stuff on there.
-
-Now we can configure `ast-grep` and create `sgconfig.yml`:
+So in this example rule:
 
 ```yaml
-# sgconfig.yml
-ruleDirs: [rules]
-customLanguages:
-  gleam:
-    # For MacOS, or gleam.so on Linux
-    libraryPath: .ast-grep/parsers/gleam.dylib
-    extensions: [gleam]
+rule:
+  pattern: api_client.fetch_user($CLIENT, $ID)
+fix: "api_client.fetch_user_with_timeout($CLIENT, $ID, timeout: 5000)"
 ```
 
-On MacOS it's `dylib`
+`$CLIENT` and `$ID` cannot be captured correctly.
 
-If you already have some rules setup in the `rules/` directory, you can run `ast-grep scan .` to run it on your project.
+This repository supplies a patch for the current Gleam tree sitter repository, that you can apply like this:
+
+```bash
+git -C .ast-grep/tree-sitter-gleam apply ../../patches/tree-sitter-gleam-metavariables.patch
+(cd .ast-grep/tree-sitter-gleam && tree-sitter generate)
+```
+
+This repository also contains examples of potential refactorings of some dummy modules, that you can try out.
+
+```bash
+ast-grep scan --rule refactors/add_fetch_timeout.yml --interactive
+ast-grep scan --rule refactors/introduce_mail_message.yml --interactive
+ast-grep scan --rule refactors/replace_bool_status.yml --interactive
+```
 
 ## Caveats
 

@@ -200,16 +200,27 @@ I think a big opportunity for `ast-grep` are rules specific to your Gleam librar
 
 Here are some rules I was able to come up with and I think are valid to look out for:
 
+**Standard Library**
+
 - [stdlib_prefer_list_is_empty](./rules/stdlib_prefer_list_is_empty.yml)
 - [stdlib_prefer_list_not_empty](./rules/stdlib_prefer_list_not_empty.yml)
 - [stdlib_prefer_flat_map](./rules/stdlib_prefer_flat_map.yml)
 - [stdlib_prefer_string_is_empty](./rules/stdlib_prefer_string_is_empty.yml)
 - [stdlib_prefer_string_not_empty](./rules/stdlib_prefer_string_not_empty.yml)
 
-- [otp_](./rules/otp_.yml)
+**Erlang & OTP**
+
+- [otp_atom_create_non_literal](./rules/otp_atom_create_non_literal.yml)
+- [otp_process_kill](./rules/otp_process_kill.yml)
+- [otp_process_name_creation](./rules/otp_process_name_creation.yml)
+- [otp_spawn_unlinked](./rules/otp_spawn_unlinked.yml)
+
+**Birdie**
 
 - [birdie_literal_snapshot_title](./rules/birdie_literal_snapshot_title.yml)
 - [birdie_snap_in_collection_callback](./rules/birdie_snap_in_collection_callback.yml)
+
+**Wisp**
 
 - [wisp_plaintext_cookie](./rules/wisp_plaintext_cookie.yml)
 

@@ -7,3 +7,5 @@ erl_crash.dump
 # but needs to be built depending on the OS of the user.
 .ast-grep/
 sgconfig.yml
+
+.DS_Store

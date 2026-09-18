@@ -1,0 +1,13 @@
+# Linked processes are usually preferable to not have independent failure lifetime.
+#
+# More information: https://gleam-erlang.hexdocs.pm/gleam/erlang/process.html#spawn_unlinked
+#
+id: erlang_spawn_unlinked
+language: gleam
+severity: warning
+message: Prefer a linked or supervised process
+note: Use an actor, a supervisor, or process.spawn. Suppress this warning only when the process must have an independent lifetime.
+rule:
+  all:
+    - kind: field_access
+    - regex: ^process[.]spawn_unlinked$

@@ -1,0 +1,14 @@
+id: birdie_snap_in_collection_callback
+language: gleam
+severity: warning
+message: Do not create snapshots repeatedly inside a collection callback
+note: A list callback can execute the same snapshot site more than once. Snapshot the collection or write separate snapshots.
+rule:
+  pattern: "birdie.snap($$$SNAP_ARGUMENTS)"
+  inside:
+    all:
+      - kind: anonymous_function
+      - inside:
+          pattern: "list.$FUNCTION($$$LIST_ARGUMENTS)"
+          stopBy: end
+    stopBy: end

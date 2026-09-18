@@ -1,0 +1,11 @@
+id: birdie_literal_snapshot_title
+language: gleam
+severity: warning
+message: Use a unique literal Birdie snapshot title
+note: Birdie can detect duplicate titles during review only when titles are string literals.
+rule:
+  pattern: "birdie.snap($$$ARGUMENTS, title: $TITLE)"
+constraints:
+  TITLE:
+    not:
+      kind: string

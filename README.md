@@ -194,6 +194,25 @@ ast-grep scan --rule refactors/introduce_mail_message.yml --interactive
 ast-grep scan --rule refactors/replace_bool_status.yml --interactive
 ```
 
+### Library Specific Rules
+
+I think a big opportunity for `ast-grep` are rules specific to your Gleam library. This could be [lustre](https://github.com/lustre-labs/lustre), [birdie](https://github.com/giacomocavalieri/birdie), [gleam_otp](https://github.com/gleam-lang/otp), [wisp](https://github.com/gleam-wisp/wisp) or the [Gleam standard library](https://gleam-stdlib.hexdocs.pm/).
+
+Here are some rules I was able to come up with and I think are valid to look out for:
+
+- [stdlib_prefer_list_is_empty](./rules/stdlib_prefer_list_is_empty.yml)
+- [stdlib_prefer_list_not_empty](./rules/stdlib_prefer_list_not_empty.yml)
+- [stdlib_prefer_flat_map](./rules/stdlib_prefer_flat_map.yml)
+- [stdlib_prefer_string_is_empty](./rules/stdlib_prefer_string_is_empty.yml)
+- [stdlib_prefer_string_not_empty](./rules/stdlib_prefer_string_not_empty.yml)
+
+- [otp_](./rules/otp_.yml)
+
+- [birdie_literal_snapshot_title](./rules/birdie_literal_snapshot_title.yml)
+- [birdie_snap_in_collection_callback](./rules/birdie_snap_in_collection_callback.yml)
+
+- [wisp_plaintext_cookie](./rules/wisp_plaintext_cookie.yml)
+
 ## Caveats
 
 With `ast-grep` we can find a lot of useful patterns to look for in Gleam code. However there are many limitations going off purely the AST
@@ -233,6 +252,33 @@ rule:
 
 More gotchas are documented in Gleams [tree-sitter](https://github.com/gleam-lang/tree-sitter-gleam/) repository: https://github.com/gleam-lang/tree-sitter-gleam/#various-gotchas
 
+I also think it's worth noting that even though Gleam's syntax is very minimalistic, it is still sometimes hard to think about all of the patterns to cover.
+A function call with an argument has to be covered in at least 3 different ways:
+
+```yml
+# Call
+pattern: wibble.wobble($VALUE)
+pattern: $VALUE |> wibble.wobble
+pattern: $VALUE |> wibble.wobble()
+```
+
+There are probably ways around this and you can write reusable utility functions in `ast-grep`. But definitely something to think about. Always good to test your
+rules on a bunch of syntax variations of something and put a few random assignments and pipes in there just to be sure.
+
 ## Future Work & Ideas
 
-I think Gleam
+`ast-grep` is a very versatile tool. It can be used for linting, large refactorings, codemods, inventory, search and probably other things I can't
+think of right now.
+
+And to make it loop back to Gleam again. The team behind Gleam is very good at making sure that tooling and features solve real world problems with evidence behind them. Giving people a couple dozen linting rules is probably not going to benefit a lot of people.
+
+I can see a lot more value in library and application specific rules. If you are following [DDD](https://en.wikipedia.org/wiki/Domain-driven_design) you might want to setup some module boundary rules. If you're noticing patterns specific to your application or construction of HTML components with [lustre](https://github.com/lustre-labs/lustre), you might want to setup a rule to catch that again in the future. Or prevent accessing env variables outside of your module that defines a schema for it. As with all tooling, you can get very creative with it, but also easy to get distracted! Attention is all you need. (hehe)
+
+I found a few other projects online that make use of `ast-grep` which is definitely worth looking at for inspiration and learning how to integrate
+`ast-grep` into your project and CI.
+
+- https://github.com/Kong/kong
+- https://github.com/qdrant/qdrant
+- https://github.com/nushell/nushell
+- https://github.com/CesiumGS/cesium
+- https://github.com/apache/lucene

@@ -1,0 +1,10 @@
+id: stdlib_prefer_flat_map
+language: gleam
+severity: warning
+message: Use list.flat_map instead of mapping and then flattening
+rule:
+  any:
+    - pattern: list.flatten(list.map($LIST, $FUNCTION))
+    - pattern: list.map($LIST, $FUNCTION) |> list.flatten
+    - pattern: $LIST |> list.map($FUNCTION) |> list.flatten
+fix: list.flat_map($LIST, $FUNCTION)

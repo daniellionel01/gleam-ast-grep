@@ -1,0 +1,8 @@
+id: stdlib_prefer_list_is_empty
+language: gleam
+severity: warning
+message: Use list.is_empty instead of traversing the list
+rule:
+  any:
+    - pattern: list.length($LIST) == 0
+fix: list.is_empty($LIST)

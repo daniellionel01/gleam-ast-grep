@@ -1,0 +1,10 @@
+id: stdlib_prefer_string_not_empty
+language: gleam
+severity: warning
+message: Use string.is_empty instead of counting graphemes
+rule:
+  any:
+    - pattern: string.length($STRING) != 0
+    - pattern: string.length($STRING) > 0
+    - pattern: string.length($STRING) >= 1
+fix: "!string.is_empty($STRING)"

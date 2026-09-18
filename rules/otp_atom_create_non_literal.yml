@@ -1,0 +1,18 @@
+# BEAM atoms are not garbage collected. Too many unique atoms fill the atom table and crash the virtual machine.
+#
+# More information: https://gleam-erlang.hexdocs.pm/gleam/erlang/atom.html#create
+#
+id: erlang_atom_create_non_literal
+language: gleam
+severity: warning
+message: Do not create atoms from user input
+note: Use a custom type for user input. Convert only string literals or values for allowed inputs.
+rule:
+  any:
+    - pattern: atom.create($VALUE)
+    - pattern: $VALUE |> atom.create
+    - pattern: $VALUE |> atom.create()
+constraints:
+  VALUE:
+    not:
+      regex: '^"'

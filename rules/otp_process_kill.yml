@@ -1,0 +1,14 @@
+# process.kill sends an untrappable exit signal. The target cannot handle the signal before termination.
+# This warning permits intentional forced termination after review.
+#
+# More information: https://gleam-erlang.hexdocs.pm/gleam/erlang/process.html#kill
+#
+id: erlang_process_kill
+language: gleam
+severity: warning
+message: Review untrappable process termination
+note: Use supervisor shutdown or process.send_exit when the target must handle termination. Suppress this warning only for intentional forced termination.
+rule:
+  all:
+    - kind: field_access
+    - regex: ^process[.]kill$

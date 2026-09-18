@@ -1,0 +1,11 @@
+id: wisp_plaintext_cookie
+language: gleam
+severity: warning
+message: Confirm that this cookie does not contain trusted state
+note: Wisp PlainText cookies can be modified by clients. Use Signed when the server trusts the value.
+rule:
+  all:
+    - pattern: wisp.set_cookie($$$ARGUMENTS)
+    - has:
+        pattern: wisp.PlainText
+        stopBy: end

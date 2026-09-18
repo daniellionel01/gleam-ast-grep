@@ -1,0 +1,14 @@
+# Named processes should only ever be created at the start of your program and never dynamically,
+# such as within a loop or within a process within a supervision tree.
+#
+# More information: https://gleam-erlang.hexdocs.pm/gleam/erlang/process.html#new_name
+#
+id: erlang_process_name_creation
+language: gleam
+severity: warning
+message: Create process names only during application startup
+note: Create all names during startup and pass them down. Suppress this warning only at a startup-time creation site.
+rule:
+  all:
+    - kind: field_access
+    - regex: ^process[.]new_name$

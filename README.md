@@ -267,7 +267,6 @@ I also think it's worth noting that even though Gleam's syntax is very minimalis
 A function call with an argument has to be covered in at least 3 different ways:
 
 ```yml
-# Call
 pattern: wibble.wobble($VALUE)
 pattern: $VALUE |> wibble.wobble
 pattern: $VALUE |> wibble.wobble()

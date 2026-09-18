@@ -4,11 +4,7 @@ This project shows off how to setup [ast-grep](https://github.com/ast-grep/ast-g
 
 The setup is pretty easy. We define a custom language for `ast-grep` which references Gleam's [tree-sitter](https://github.com/gleam-lang/tree-sitter-gleam/) repository.
 
-Gleam's minimal syntax and solid primitives make it an excellent target for more static code analysis tooling. I am sure this is the beginning of a wonderful world of tooling yet to come.
-
-Gleam's compiler is already doing a lot of work for us and gives users many helpful hints about certain code patterns (unused variables, unncessary list spread, etc.). Gleam also has an excellent language server that offers many useful code actions.
-
-You
+Gleam's minimal syntax and solid primitives make it an excellent target for more static code analysis tooling. This project is not very directed, but more of an exploration into what can develop into a more solid foundation with more focused work.
 
 ## Why `ast-grep`?
 
@@ -282,7 +278,7 @@ think of right now.
 
 And to make it loop back to Gleam again. The team behind Gleam is very good at making sure that tooling and features solve real world problems with evidence behind them. Giving people a couple dozen linting rules is probably not going to benefit a lot of people.
 
-I can see a lot more value in library and application specific rules. If you are following [DDD](https://en.wikipedia.org/wiki/Domain-driven_design) you might want to setup some module boundary rules. If you're noticing patterns specific to your application or construction of HTML components with [lustre](https://github.com/lustre-labs/lustre), you might want to setup a rule to catch that again in the future. Or prevent accessing env variables outside of your module that defines a schema for it. As with all tooling, you can get very creative with it, but also easy to get distracted! Attention is all you need. (hehe)
+I can see a lot more value in library and application specific rules. If you are following [DDD](https://en.wikipedia.org/wiki/Domain-driven_design) you might want to setup some module boundary rules. If you're noticing patterns specific to your application or construction of HTML components with [lustre](https://github.com/lustre-labs/lustre), you might want to setup a rule to catch that again in the future. Or prevent accessing env variables outside of your module that defines a schema for it. As with all tooling, you can get very creative with it, but also easy to get distracted!
 
 I found a few other projects online that make use of `ast-grep` which is definitely worth looking at for inspiration and learning how to integrate
 `ast-grep` into your project and CI.

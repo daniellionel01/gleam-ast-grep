@@ -6,6 +6,17 @@ The setup is pretty easy. We define a custom language for `ast-grep` which refer
 
 Gleam's minimal syntax and solid primitives make it an excellent target for more static code analysis tooling. This project is not very directed, but more of an exploration into what can develop into a more solid foundation with more focused work.
 
+## Contents
+
+- [Why `ast-grep`?](#why-ast-grep)
+- [Setup and Installation](#setup-and-installation)
+- [Use Cases](#use-cases)
+  - [Linting](#linting)
+  - [Refactors](#refactors)
+  - [Library Specific Rules](#library-specific-rules)
+- [Caveats](#caveats)
+- [Future Work & Ideas](#future-work--ideas)
+
 ## Why `ast-grep`?
 
 You can come a loong way with "just" `grep` and don't immediately have to opt for `ast-grep`. But I do think for larger structural changes, linting rule distribution and not having to deal with regex edge cases it is worth exploring.
@@ -257,7 +268,7 @@ rule:
           kind: type
 ```
 
-More gotchas are documented in Gleams [tree-sitter](https://github.com/gleam-lang/tree-sitter-gleam/) repository: https://github.com/gleam-lang/tree-sitter-gleam/#various-gotchas
+More gotchas are documented in Gleams [tree-sitter](https://github.com/gleam-lang/tree-sitter-gleam/) repository: <https://github.com/gleam-lang/tree-sitter-gleam/#various-gotchas>
 
 I also think it's worth noting that even though Gleam's syntax is very minimalistic, it is still sometimes hard to think about all of the patterns to cover.
 A function call with an argument has to be covered in at least 3 different ways:
@@ -283,8 +294,8 @@ I can see a lot more value in library and application specific rules. If you are
 I found a few other projects online that make use of `ast-grep` which is definitely worth looking at for inspiration and learning how to integrate
 `ast-grep` into your project and CI.
 
-- https://github.com/Kong/kong
-- https://github.com/qdrant/qdrant
-- https://github.com/nushell/nushell
-- https://github.com/CesiumGS/cesium
-- https://github.com/apache/lucene
+- <https://github.com/Kong/kong>
+- <https://github.com/qdrant/qdrant>
+- <https://github.com/nushell/nushell>
+- <https://github.com/CesiumGS/cesium>
+- <https://github.com/apache/lucene>
